@@ -1,78 +1,99 @@
 package lab4_DocSo;
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
+public class Server_DocSo {
 
+private static ServerSocket serverSocket = null;
 
-public class Server_DocSo{	
-	public static String ReadNum(String x) {
-		String rd;
-		if(x.matches("[0-9]+")){
-			int n = Integer.parseInt(x);
-			if(n <= 100) {
-				String chuc = "",dv = "";
-				int mod = n%10;
-				int div = n/10;
-				switch(div) {
-					case 2:{ dv = "hai"; break; }
-					case 3:{ dv = "ba"; break; }
-					case 4:{ dv = "bon"; break; }
-					case 5:{ dv = "nam"; break; }
-					case 6:{ dv = "sau"; break; }
-					case 7:{ dv = "bay"; break; }
-					case 8:{ dv = "tam"; break; }
-					case 9:{ dv = "chin"; break; }
-				}
-				switch(mod) {
-					case 1:{ chuc = "mot"; break; }
-					case 2:{ chuc = "hai"; break; }
-					case 3:{ chuc = "ba"; break; }
-					case 4:{ chuc = "bon"; break; }
-					case 5:{ chuc = "lam"; break; }
-					case 6:{ chuc = "sau"; break; }
-					case 7:{ chuc = "bay"; break; }
-					case 8:{ chuc = "tam"; break; }
-					case 9:{ chuc = "chin"; break; }		
-				}
-				if(n < 10) {
-					if(n == 0) {rd = "khong";}
-					else if(n == 5) {rd = "nam";}
-					else {rd = chuc;}
-				}
-				else {
-					if(n == 10) rd = "muoi";
-					else if(n == 100) rd = "mot tram";
-					else
-					rd = dv + " muoi " + chuc;
-				}
-			}
-			else {
-				rd = "Nhap so nho hon 100";
-			}
-		}
-		else {
-			rd = "Nhap lai";
-		}
-		return rd;
-	}
-	public static void main(String[] args){
-		try {
-		@SuppressWarnings("resource")
-		ServerSocket server = new ServerSocket(7979);
-		System.out.println("Server da duoc tao");
-		Socket client = server.accept();
-		System.out.println("Client da ket noi den server");
-		Scanner inFromClient = new Scanner(client.getInputStream());
-		PrintStream outToClient = new PrintStream(client.getOutputStream());
-		outToClient.println("Nhap So :");
-		String txt = inFromClient.nextLine();
-		outToClient.println("Doc La : " + ReadNum(txt));
-		} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		}
-		}
+public static void main(String[] args) throws IOException{
+
+// TODO code application logic here
+
+    DataOutputStream dos = null;
+
+    DataInputStream dis=null;
+
+    try {
+
+        serverSocket = new ServerSocket(7777);
+
+        System.out.print("Server da đuoc tao" );
+
+        Socket clientSocket = null;
+
+        clientSocket = serverSocket.accept();
+
+        dos=new DataOutputStream(clientSocket.getOutputStream());
+
+        dis=new DataInputStream(clientSocket.getInputStream());
+
+        String doc="";
+
+        while(true)
+
+        {
+
+            doc = dis.readUTF();
+
+            char ch[]=doc.toCharArray();
+
+            if(Character.isDigit(ch[0]))
+
+                {
+
+                int i=Integer.parseInt(doc);
+
+                switch(i)
+
+                {
+
+                    case 0:doc="Khong";break;
+
+                    case 1:doc="Mot";break;
+
+                    case 2:doc="Hai";break;
+
+                    case 3:doc="Ba";break;
+
+                    case 4:doc="Bon";break;
+
+                    case 5:doc="Nam";break;
+
+                    case 6:doc="Sau";break;
+
+                    case 7:doc="Bay";break;
+
+                    case 8:doc="Tam";break;
+
+                    case 9:doc="Chin";break;
+                    default:
+                    	doc="Khong phai la so nguyen";
+
+                }
+
+                dos.writeUTF(doc);
+
+            }
+
+        }
+
+    }
+
+    catch(Exception e) {
+
+        dos.close();
+
+        serverSocket.close();
+
+        dis.close();
+
+        System.out.print(e.getMessage());
+
+    }
+
 }
+
+} 
