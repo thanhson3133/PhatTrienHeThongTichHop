@@ -1,33 +1,74 @@
 package lab4_DocSo;
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
+public class Client_DocSo
 
-public class Client_DocSo {
-	public static void main(String[] args) {
-		try {
-		@SuppressWarnings("resource")
-		Socket client = new Socket("LocalHost", 7979);
-		System.out.println("Client da duoc tao");
-		Scanner inFromServer = new Scanner(client.getInputStream());
-		PrintStream outToServer = new PrintStream(client.getOutputStream());
-		System.out.println("server: " + inFromServer.nextLine());
-		System.out.print(">>> ");
-		@SuppressWarnings("resource")
-		Scanner scan = new Scanner(System.in);
-		String ten = scan.nextLine();
-		outToServer.println(ten);
-		System.out.println("server: " + inFromServer.nextLine());
-		} catch (UnknownHostException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		}
-		}
+{
+    public static void main(String[] args) throws IOException
+
+    {
+
+    // TODO code application logic here
+
+   
+
+        Socket mySocket = null;
+
+        DataOutputStream dos = null;
+
+        DataInputStream dis=null;
+
+       
+
+        try {
+
+            mySocket = new Socket("localhost", 7777);
+
+            dos = new DataOutputStream(mySocket.getOutputStream());
+
+            dis = new DataInputStream(mySocket.getInputStream());
+
+            Scanner input = new Scanner(System.in);
+
+            String s = null;
+
+            while(true)
+
+            {
+
+                System.out.print("\nNhap So Muon Doc: ");
+
+                s =input.nextLine();
+
+                dos.writeUTF(s);
+
+               
+
+                String str=dis.readUTF();
+
+                System.out.print(" Server : "+str);
+
+            }
+
+        }
+
+        catch(Exception e) {
+
+            System.out.print("Ngat ket noi");
+
+            dis.close();
+
+            dos.close();
+
+            mySocket.close();
+
+            e.printStackTrace();
+
+        }
+
+    }
 
 }
